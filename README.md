@@ -18,6 +18,9 @@ O repositório inclui um workspace ROS2 com, no mínimo, um pacote devidamente c
    ```
 ## Demonstração
 
+[Screencast from 13-11-2023 13:08:48.webm](https://github.com/Bianca-Cassemiro/nav_pacotinho/assets/99203402/e14231a1-2d35-4abf-af3b-d93ab8f825f4)
 
-https://github.com/Bianca-Cassemiro/nav_pacotinho/assets/99203402/06a2f2a7-ce77-4d54-9c30-67049eb28eb6
+
+Link do drive:
+https://drive.google.com/file/d/1sj6lRObLu0dUkMtQmwKA3Qg2CxyG_zpm/view?usp=sharing
 

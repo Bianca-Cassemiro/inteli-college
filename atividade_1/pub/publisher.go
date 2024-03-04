@@ -6,7 +6,6 @@ import (
 	"os"
 	"time"
 	godotenv "github.com/joho/godotenv"
-
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
 

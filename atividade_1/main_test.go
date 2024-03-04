@@ -3,11 +3,12 @@ package main_test
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"testing"
 	"time"
-	"os"
-	godotenv "github.com/joho/godotenv"
-	mqtt "github.com/eclipse/paho.mqtt.golang"
+
+	"github.com/eclipse/paho.mqtt.golang"
+	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,34 +27,38 @@ var sensorDataList = []SensorData{
 var receivedMessages = make(chan mqtt.Message)
 
 func TestRecebimento(t *testing.T) {
-    client := createTestMQTTServer("tcp://localhost:1883", "Bia", nil)
+	client := createTestMQTTServer("Bia", func(client mqtt.Client, msg mqtt.Message) {
+		receivedMessages <- msg
+	})
 
-    // Publica mensagens simuladas.
-    for _, sensorData := range sensorDataList {
-        message := fmt.Sprintf("Valor: %.2f %s\nTimestamp: %s\nLocalização: %s", sensorData.Value, sensorData.Unit, sensorData.Timestamp, sensorData.Location)
-        client.Publish("Bia", 0, false, message)
-    }
-
-    // Verifica se as mensagens foram recebidas e se contêm os dados esperados.
-    for _, expectedData := range sensorDataList {
-        received := <-receivedMessages
-
-        assert.Contains(t, received, fmt.Sprintf("Valor: %.2f %s", expectedData.Value, expectedData.Unit))
-        assert.Contains(t, received, fmt.Sprintf("Timestamp: %s", expectedData.Timestamp))
-        assert.Contains(t, received, fmt.Sprintf("Localização: %s", expectedData.Location))
-    }
-
-    // Desconecta o cliente MQTT.
-    client.Disconnect(0)
-}
-
-
-func TestValidacaoDosDados(t *testing.T) {
-	client := createTestMQTTServer("tcp://localhost:1883", "Bia", nil)
+	defer client.Disconnect(0)
 
 	// Publica mensagens simuladas.
 	for _, sensorData := range sensorDataList {
 		message := fmt.Sprintf("Valor: %.2f %s\nTimestamp: %s\nLocalização: %s", sensorData.Value, sensorData.Unit, sensorData.Timestamp, sensorData.Location)
+		client.Publish("Bia", 0, false, message)
+	}
+
+	// Verifica se as mensagens foram recebidas e se contêm os dados esperados.
+	for _, expectedData := range sensorDataList {
+		received := <-receivedMessages
+
+		assert.Contains(t, string(received.Payload()), fmt.Sprintf("Valor: %.2f %s", expectedData.Value, expectedData.Unit))
+		assert.Contains(t, string(received.Payload()), fmt.Sprintf("Timestamp: %s", expectedData.Timestamp))
+		assert.Contains(t, string(received.Payload()), fmt.Sprintf("Localização: %s", expectedData.Location))
+	}
+}
+
+func TestValidacaoDosDados(t *testing.T) {
+	client := createTestMQTTServer("Bia", func(client mqtt.Client, msg mqtt.Message) {
+		receivedMessages <- msg
+	})
+
+	defer client.Disconnect(0)
+
+	// Publica mensagens simuladas.
+	for _, sensorData := range sensorDataList {
+		message := fmt.Sprintf(`{"value": %.2f, "unit": "%s", "timestamp": "%s", "location": "%s"}`, sensorData.Value, sensorData.Unit, sensorData.Timestamp, sensorData.Location)
 		client.Publish("Bia", 0, false, message)
 	}
 
@@ -69,14 +74,12 @@ func TestValidacaoDosDados(t *testing.T) {
 
 		assert.Equal(t, expectedData, receivedData)
 	}
-
-	// Desconecta o cliente MQTT.
-	client.Disconnect(0)
-
 }
 
 func TestConfirmacaoDaTaxaDeDisparo(t *testing.T) {
-	client := createTestMQTTServer("localhost:1883", "Bia", nil)
+	client := createTestMQTTServer("Bia", nil)
+
+	defer client.Disconnect(0)
 
 	// Publica mensagens simuladas.
 	for _, sensorData := range sensorDataList {
@@ -84,11 +87,10 @@ func TestConfirmacaoDaTaxaDeDisparo(t *testing.T) {
 		client.Publish("Bia", 0, false, message)
 		time.Sleep(1 * time.Second)
 	}
-
 }
 
-func TestIntegraçãoHiveMQ(t *testing.T) {
-	godotenv.Load("../.env")
+func TestIntegracaoHiveMQ(t *testing.T) {
+	godotenv.Load(".env")
 	var broker = os.Getenv("BROKER_ADDR")
 	var port = 8883
 	opts := mqtt.NewClientOptions()
@@ -99,19 +101,31 @@ func TestIntegraçãoHiveMQ(t *testing.T) {
 
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
+		t.Fatalf("Falha ao conectar ao HiveMQ: %v", token.Error())
 	}
+	defer client.Disconnect(0)
+
 	// Publica mensagens simuladas.
 	for _, sensorData := range sensorDataList {
 		message := fmt.Sprintf("Valor: %.2f %s\nTimestamp: %s\nLocalização: %s", sensorData.Value, sensorData.Unit, sensorData.Timestamp, sensorData.Location)
-		client.Publish("Bia", 0, false, message)
+		token := client.Publish("Bia", 0, false, message)
+		token.Wait()
+		if token.Error() != nil {
+			t.Fatalf("Falha ao publicar mensagem: %v", token.Error())
+		}
 	}
 }
 
-func createTestMQTTServer(brokerURL, topic string, messageHandler mqtt.MessageHandler) mqtt.Client {
-	opts := mqtt.NewClientOptions().AddBroker(brokerURL)
+func createTestMQTTServer(topic string, messageHandler mqtt.MessageHandler) mqtt.Client {
+	godotenv.Load(".env")
+	var broker = os.Getenv("BROKER_ADDR")
+	var port = 8883
+	opts := mqtt.NewClientOptions()
+	opts.AddBroker(fmt.Sprintf("tls://%s:%d", broker, port))
 	opts.SetClientID("test-client")
 	opts.SetCleanSession(true)
+	opts.SetUsername(os.Getenv("HIVE_USER"))
+	opts.SetPassword(os.Getenv("HIVE_PSWD"))
 
 	client := mqtt.NewClient(opts)
 
@@ -127,4 +141,3 @@ func createTestMQTTServer(brokerURL, topic string, messageHandler mqtt.MessageHa
 
 	return client
 }
-

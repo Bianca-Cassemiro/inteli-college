@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"time"
+	godotenv "github.com/joho/godotenv"
 
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
@@ -17,8 +18,13 @@ type SensorData struct {
 }
 
 func main() {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		fmt.Printf("Error loading .env file: %s", err)
+	}
+
 	// Abre arquivo JSON
-	file, err := os.Open("sensor_data.json")
+	file, err := os.Open("../sensor_data.json")
 	if err != nil {
 		panic(err)
 	}
@@ -30,8 +36,14 @@ func main() {
 	}
 
 	// Configuração do cliente MQTT
-	opts := MQTT.NewClientOptions().AddBroker("tcp://localhost:1883")
-	opts.SetClientID("go_publisher")
+	var broker = os.Getenv("BROKER_ADDR")
+	var port = 8883
+	opts := MQTT.NewClientOptions()
+	opts.AddBroker(fmt.Sprintf("tls://%s:%d", broker, port))
+	opts.SetClientID("Publisher")
+	opts.SetUsername(os.Getenv("HIVE_USER"))
+	opts.SetPassword(os.Getenv("HIVE_PSWD"))
+	
 
 	client := MQTT.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {

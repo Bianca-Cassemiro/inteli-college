@@ -2,16 +2,28 @@ package main
 
 import (
 	"fmt"
+	"os"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
+	godotenv "github.com/joho/godotenv"
 )
 
 var messagePubHandler MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
 	fmt.Printf("Recebido: %s do tópico: %s\n", msg.Payload(), msg.Topic())
 }
 
-func Subscriber() {
-	opts := MQTT.NewClientOptions().AddBroker("tcp://localhost:1883")
-	opts.SetClientID("go_subscriber")
+func main() {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		fmt.Printf("Error loading .env file: %s", err)
+	}
+
+	var broker = os.Getenv("BROKER_ADDR")
+	var port = 8883
+	opts := MQTT.NewClientOptions()
+	opts.AddBroker(fmt.Sprintf("tls://%s:%d", broker, port))
+	opts.SetClientID("Subscriber")
+	opts.SetUsername(os.Getenv("HIVE_USER"))
+	opts.SetPassword(os.Getenv("HIVE_PSWD"))
 	opts.SetDefaultPublishHandler(messagePubHandler)
 
 	client := MQTT.NewClient(opts)

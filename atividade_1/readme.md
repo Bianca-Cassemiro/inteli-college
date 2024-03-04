@@ -42,6 +42,10 @@ Implementação:
 Resultados Esperados:
 - A taxa de disparo real deve estar dentro da margem de erro especificada.
 - O publisher deve atender às suas especificações de desempenho.
+
+## Teste de Integração 
+Verifica se a integração com o HiveMQ está sendo realizada com sucesso.
+  
 ## Como executar 
 1) Clone o repositório
 2) Execute os comandos abaixo
@@ -59,6 +63,6 @@ go mod tidy
 go test
 ```
 
-## Vídeo Demonstração
-[Screencast from 26-02-2024 11:00:46.webm](https://github.com/Bianca-Cassemiro/modulo-9/assets/99203402/d185830d-4fb7-497f-9d55-a431907167cd)
+## Video Demonstração
+[Screencast from 04-03-2024 08:35:23.webm](https://github.com/Bianca-Cassemiro/modulo-9/assets/99203402/82b084f5-4668-4fe6-8456-fa200d385a6a)
 

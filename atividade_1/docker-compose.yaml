@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+    metabase:
+        volumes:
+            - ./banco.db:/banco.db
+        environment:
+            - MB_DB_FILE=/metabase.db/metabase.db
+        ports:
+            - 3000:3000
+        image: metabase/metabase
+        restart: always

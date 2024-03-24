@@ -31,7 +31,7 @@ func main() {
 		panic(token.Error())
 	}
 
-	if token := client.Subscribe("Bia", 1, nil); token.Wait() && token.Error() != nil {
+	if token := client.Subscribe("my/test/topic", 1, nil); token.Wait() && token.Error() != nil {
 		fmt.Println(token.Error())
 		return
 	}

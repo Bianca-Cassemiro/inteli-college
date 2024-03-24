@@ -54,14 +54,12 @@ func main() {
 		for {
 			for _, sensorData := range sensorDataList {
 				message := fmt.Sprintf("Valor: %.2f %s\nTimestamp: %s\nLocalização: %s", sensorData.Value, sensorData.Unit, sensorData.Timestamp, sensorData.Location)
-				token := client.Publish("Bia", 0, false, message)
+				token := client.Publish("my/test/topic", 0, false, message)
 				token.Wait()
 				fmt.Printf("Leitura do sensor:\n\n%s\n\n", message)
 				time.Sleep(2 * time.Second)
 			}
 		}
-
-		
 			
 	}
 	

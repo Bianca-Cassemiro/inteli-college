@@ -7,6 +7,8 @@ import (
 	"time"
 	godotenv "github.com/joho/godotenv"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+
 )
 
 type SensorData struct {
@@ -21,6 +23,11 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error loading .env file: %s", err)
 	}
+
+	producer, err := kafka.NewProducer(&kafka.ConfigMap{
+		"bootstrap.servers": "localhost:29092,localhost:39092",
+		"client.id":         "go-producer",
+	})
 
 	// Abre arquivo JSON
 	file, err := os.Open("../sensor_data.json")
@@ -54,7 +61,12 @@ func main() {
 		for {
 			for _, sensorData := range sensorDataList {
 				message := fmt.Sprintf("Valor: %.2f %s\nTimestamp: %s\nLocalização: %s", sensorData.Value, sensorData.Unit, sensorData.Timestamp, sensorData.Location)
-				token := client.Publish("my/test/topic", 0, false, message)
+				token := client.Publish("KafkaBia", 0, false, message)
+				topic := "KafkaBia"
+				producer.Produce(&kafka.Message{
+					TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+					Value:          []byte(message),
+				}, nil)
 				token.Wait()
 				fmt.Printf("Leitura do sensor:\n\n%s\n\n", message)
 				time.Sleep(2 * time.Second)

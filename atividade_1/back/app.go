@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/eclipse/paho.mqtt.golang"
-	"github.com/mattn/go-sqlite3"
 	"github.com/joho/godotenv"
 )
 
@@ -70,7 +69,6 @@ func main() {
 		return
 	}
 
-	client.SetOnConnectHandler(onConnectHandler)
 	client.Subscribe(topic, 1, onMessageHandler)
 
 	select {}

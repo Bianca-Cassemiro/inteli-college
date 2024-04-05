@@ -6,7 +6,7 @@ Essa atividade tem como objetivo mostrar a comunicação no kafka.
 ```
 go mod tidy
 ```
-2) Vá até a kafka e execute
+2) Vá até a pasta kafka e execute
 ```
 docker compose up
 ```

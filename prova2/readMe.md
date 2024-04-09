@@ -1,12 +1,12 @@
 # Prova 2
-Essa atividade tem como objetivo  
+Essa atividade tem como objetivo mostrar a comunicação no kafka. 
 
 # Como executar 
 1) Para baixar todas as dependências.
 ```
 go mod tidy
 ```
-2) Vá até a kafka e execute
+2) Vá até a pasta kafka e execute
 ```
 docker compose up
 ```
@@ -27,3 +27,4 @@ go test
 3) A mensagem no terminal é apresentada por parte do consumer do modo estruturado.
    
 # Video demonstração
+[Gravação de tela de 05-04-2024 10:51:59.webm](https://github.com/Bianca-Cassemiro/modulo-9/assets/99203402/bc17530e-b560-4adb-bc0d-9ed73bad8073)

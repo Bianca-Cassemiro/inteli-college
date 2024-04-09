@@ -66,3 +66,5 @@ go test
 ## Video Demonstração
 [Screencast from 04-03-2024 08:35:23.webm](https://github.com/Bianca-Cassemiro/modulo-9/assets/99203402/82b084f5-4668-4fe6-8456-fa200d385a6a)
 
+## Video demonstração Kafka
+[Gravação de tela de 09-04-2024 10:24:10.webm](https://github.com/Bianca-Cassemiro/modulo-9/assets/99203402/28064480-4a94-444a-8787-e90f8ce3d6c9)

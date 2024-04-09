@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
@@ -17,20 +18,18 @@ type SensorData struct {
 func main() {
 
 	// Cria um arquivo chamado "mensagens.txt"
-    fileTxt, err := os.Create("mensagens.txt")
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
-    defer fileTxt.Close()
-
-
+	fileTxt, err := os.Create("mensagens.txt")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer fileTxt.Close()
 
 	// Configurações do produtor
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
-			"bootstrap.servers": "localhost:29092,localhost:39092",
-			"client.id":         "go-producer",
-		})
+		"bootstrap.servers": "localhost:29092,localhost:39092",
+		"client.id":         "go-producer",
+	})
 	if err != nil {
 		fmt.Printf("Erro ao criar o produtor: %v\n", err)
 		return
@@ -38,7 +37,7 @@ func main() {
 	defer producer.Close()
 
 	// Abre arquivo JSON
-	file, err := os.Open("../sensor_data.json")
+	file, err := os.Open("./sensor_data.json")
 	if err != nil {
 		fmt.Printf("Erro ao abrir o arquivo JSON: %v\n", err)
 		return
@@ -60,19 +59,19 @@ func main() {
 			Value:          []byte(message),
 		}, nil)
 
-		_, err = fileTxt.WriteString("\n"+ message + "\n")
-   		 if err != nil {
-        fmt.Println(err)
-        return
-   		 }
+		_, err = fileTxt.WriteString("\n" + message + "\n")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 
 	}
 
 	err = file.Sync()
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Aguardar a entrega de todas as mensagens
 	producer.Flush(15 * 1000)

@@ -10,3 +10,5 @@
 5. **Impressão dos resultados finais**: Os resultados agrupados são então impressos no formato desejado. O loop `for` itera sobre as linhas do resultado agrupado e imprime os valores mínimos, médios e máximos para cada estação, seguindo o formato "{station_name=min_measurement/mean_measurement/max_measurement, ...}". O caractere "\b" é usado para retroceder o cursor antes de imprimir a vírgula para evitar uma vírgula no final da impressão.
 
 Este código basicamente lê os dados de um arquivo CSV, os agrupa por uma determinada coluna, calcula estatísticas resumidas para cada grupo e imprime os resultados formatados.
+
+[Gravação de tela de 11-04-2024 12:54:29.webm](https://github.com/Bianca-Cassemiro/modulo-9/assets/99203402/48d744a4-5206-43f5-aa45-4db58889163c)

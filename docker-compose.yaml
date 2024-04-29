@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  api-sincrona:
+    build: ./sincrono/
+    ports:
+      - "5000:5000"
+  api-assincrona:
+    build: ./assincrono/
+    ports:
+      - "5001:5001"

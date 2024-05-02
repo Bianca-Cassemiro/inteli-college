@@ -1,9 +1,8 @@
 from flask import Flask, request, jsonify
-from flask_swagger_ui import get_swaggerui_blueprint
 import sqlite3
-from middleware.auth import token_required
+from sqlalchemy.orm import Session
+from auth.auth import token_required
 import jwt
-
 
 app = Flask(__name__)
 

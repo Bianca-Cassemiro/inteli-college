@@ -18,7 +18,7 @@ def generate_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire,"username": data["username"]})
-    encoded_jwt = jwt.encode(to_encode, os.environ["SECRET_KEY"], algorithm=os.environ["ALGORITHM"])
+    encoded_jwt = jwt.encode(to_encode, os.environ["SECRET"], algorithm=os.environ["ALG"])
     return encoded_jwt
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

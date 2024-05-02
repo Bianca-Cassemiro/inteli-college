@@ -4,11 +4,11 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip3 install --upgrade pip
+RUN pip install --upgrade pip
 
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
-RUN touch sqlite.db
+RUN touch banco.db
 
 RUN python create_table.py
 

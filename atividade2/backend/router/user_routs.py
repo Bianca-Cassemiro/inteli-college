@@ -44,4 +44,4 @@ async def get_user(token: str = Depends(oauth2_scheme)):
     connection = sqlite3.connect("banco.db")
     cursor = connection.cursor()
     username = validate_token(token)
-    return {"user": username}
+    return {"username": username}

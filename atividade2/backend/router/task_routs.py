@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
 import sqlite3
 from models.task_model import Task
-from router.user_routs import getUser
+from router.user_routs import get_user
 from typing import List
 
 router = APIRouter()
 
 @router.post('/add_task')
-async def add_task(new_task: Task, user_token: dict = Depends(getUser)):
+async def add_task(new_task: Task, user_token: dict = Depends(get_user)):
     connection = sqlite3.connect("banco.db")
     cursor = connection.cursor()
     title = new_task.title
@@ -15,16 +15,16 @@ async def add_task(new_task: Task, user_token: dict = Depends(getUser)):
     if not content:
         return {"status": "failed content is required"}
     username = user_token['username']
-    cursor.execute("SELECT * FROM user_tasks WHERE title = ? AND username = ?", (title, username))
+    cursor.execute("SELECT * FROM tasks WHERE title = ?", (title,))
     existing_task = cursor.fetchone()
     if existing_task:
         return {"status": "failed task already exists"}
-    cursor.execute("INSERT INTO user_tasks (title, content, username) VALUES (?, ?, ?)", (title, content, username,))
+    cursor.execute("INSERT INTO tasks (title, content) VALUES (?, ?)", (title, content))
     connection.commit()
     return {"status": "success creating task with title: " + title}
 
 @router.get('/get_tasks', response_model=List[Task])
-async def get_tasks(user_token: dict = Depends(getUser)):
+async def get_tasks(user_token: dict = Depends(get_user)):
     connection = sqlite3.connect("banco.db")
     cursor = connection.cursor()
     username = user_token['username']
@@ -33,7 +33,7 @@ async def get_tasks(user_token: dict = Depends(getUser)):
     return tasks
 
 @router.delete('/delete_task')
-async def delete_task(task: Task, user_token: dict = Depends(getUser)):
+async def delete_task(task: Task, user_token: dict = Depends(get_user)):
     connection = sqlite3.connect("banco.db")
     cursor = connection.cursor()
     username = user_token['username']
@@ -47,7 +47,7 @@ async def delete_task(task: Task, user_token: dict = Depends(getUser)):
     return {"status": "success deleting task with title: " + title}
 
 @router.put('/update_task')
-async def update_task(task: Task, user_token: dict = Depends(getUser)):
+async def update_task(task: Task, user_token: dict = Depends(get_user)):
     connection = sqlite3.connect("banco.db")
     cursor = connection.cursor()
     username = user_token['username']

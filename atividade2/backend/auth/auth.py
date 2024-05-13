@@ -18,7 +18,7 @@ def generate_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire,"username": data["username"]})
-    encoded_jwt = jwt.encode(to_encode, os.environ["SECRET"], algorithm=os.environ["ALG"])
+    encoded_jwt = jwt.encode(to_encode, os.environ["SECRET_KEY"], algorithm=os.environ["ALG"])
     return encoded_jwt
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -31,7 +31,7 @@ def verify_password(plain_password, hashed_password):
 
 def validate_token(token):
     try:
-        payload = jwt.decode(token, os.environ["SECRET_KEY"], algorithms=[os.environ["ALGORITHM"]])
+        payload = jwt.decode(token, os.environ["SECRET_KEY"], algorithms=[os.environ["ALG"]])
         username: str = payload.get("username")
         if username is None:
             raise HTTPException(status_code=400, detail="Invalid token")

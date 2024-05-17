@@ -2,6 +2,10 @@
 
 Durante essa atividade foi desenvolvida uma API que permite gerenciar pedidos com funcionalidades de cadastro, listagem, obtenção por ID, edição e exclusão.
 
+## Identificação do estudante
+- Nome: Bianca Cassemiro Lima
+- Turma: Eng. Comp. - módulo 10
+
 ## Como executar
 
 1. Clone o repositório.

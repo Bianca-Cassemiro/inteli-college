@@ -1,0 +1,25 @@
+
+services: 
+  user: 
+    image: user
+    build: 
+      context: user
+      dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 5001
+    container_name: User
+    restart: always
+    ports:
+      - "5001:5001"
+
+  image:
+    image: image
+    build: 
+      context: image
+      dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 5002
+    container_name: Image
+    restart: always
+    ports:
+      - "5002:5002"
+    volumes: 
+      - ./image_service:/app

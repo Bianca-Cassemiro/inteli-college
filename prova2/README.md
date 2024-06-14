@@ -8,12 +8,12 @@
 
 ## Como executar a aplicação
 
-Instale as dependências:
+Para rodar a aplicação localmente:
+- Instale as dependências:
 ```sh
     pip install -r requirements.txt
 ```
 
-Para rodar a aplicação localmente:
 ```sh
     uvicorn main:app --reload
 ```
@@ -29,3 +29,8 @@ docker-compose up --build
 - GET /blog/{id} para obter um post específico.
 - PUT /blog/{id} para atualizar um post.
 - DELETE /blog/{id} para deletar um post.
+
+## Evidências de teste
+- Arquivo json do collection contendo as rotas no postman
+- Prints de telas com o resultado
+https://docs.google.com/document/d/18DCx2NRJ9t0DWVN_6hiTiMogrvXK8RUeqG5bBzCHoOg/edit

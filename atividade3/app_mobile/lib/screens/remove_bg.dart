@@ -4,19 +4,23 @@ import 'package:image/image.dart' as img;
 import 'dart:io';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: HomePage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -69,7 +73,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Remove Background App'),
+        title: const Text('Remove Background App'),
       ),
       body: Center(
         child: Column(
@@ -77,21 +81,21 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             _image != null
                 ? Image.file(_image!)
-                : Text('Nenhuma imagem selecionada.'),
-            SizedBox(height: 20),
+                : const Text('Nenhuma imagem selecionada.'),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _pickImage,
-              child: Text('Selecionar Imagem'),
+              child: const Text('Selecionar Imagem'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _removeBackground,
-              child: Text('Remover Fundo'),
+              child: const Text('Remover Fundo'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _imageWithoutBackground != null
                 ? Image.file(_imageWithoutBackground!)
-                : Text('Nenhuma imagem sem fundo.'),
+                : const Text('Nenhuma imagem sem fundo.'),
           ],
         ),
       ),

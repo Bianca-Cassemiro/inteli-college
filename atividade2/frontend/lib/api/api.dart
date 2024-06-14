@@ -1,5 +1,4 @@
 import "dart:convert";
-import "dart:io";
 
 import "../model/todo.dart";
 
@@ -9,11 +8,11 @@ var baseurl = baseUrl;
 
 Future<List<ToDo>> getTasks() async {
   final response = await http.get(
-    Uri.parse("$baseurl/todo/user:${userId}"),
+    Uri.parse("$baseurl/todo/user:$userId"),
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${accessToken}',
+      'Authorization': 'Bearer $accessToken',
     },
   );
   if (response.statusCode == 200) {

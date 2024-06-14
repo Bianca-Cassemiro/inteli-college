@@ -5,7 +5,22 @@
 - Nome: Bianca Cassemiro Lima
 - Turma: Eng. Comp. - módulo 10
 
+## Como configurar o ambiente virtual 
 
+1. Crie um ambiente virtual:
+    ```sh
+    python -m venv venv
+    ```
+
+2. Ative o ambiente virtual:
+    ```sh
+    source venv/bin/activate 
+    ```
+
+3. Instale as dependências:
+    ```sh
+    pip install
+    ```
 ## Como executar a aplicação
 
 Para rodar a aplicação localmente:

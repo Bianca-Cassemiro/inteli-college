@@ -13,7 +13,7 @@ Este projeto implementa um sistema de logs com um gateway NGINX, um serviço de 
 5. **Kibana**: Utilizado para visualizar os logs armazenados no Elasticsearch.
 
 ## Estrutura do Projeto
-
+```
 ├── backend/
 ├── filebeat/
 ├── elasticsearch/
@@ -26,7 +26,7 @@ Este projeto implementa um sistema de logs com um gateway NGINX, um serviço de 
 ├── nginx/
 │ └── nginx.conf
 └── docker-compose.yml
-
+```
 
 ## Configuração
 
@@ -57,7 +57,7 @@ Este projeto implementa um sistema de logs com um gateway NGINX, um serviço de 
 
 ## Executando o Sistema
 
-1. **Construir e Executar os Contêineres**:
+1. **Execute os Conteiners**:
 ```
    docker-compose up --build
 ```
